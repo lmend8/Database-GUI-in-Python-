@@ -12,11 +12,12 @@ win.title("Database GUI")
 win.geometry("800x600")
 
 frm = Frame(win)
-frm.pack(side=tk.LEFT, padx=20)
+frm.pack(side=tk.TOP, padx=20)
 
 
-btn = Button(frm ,text="Show",command = BDB.get_games)
-btn.pack(side = tk.TOP, padx =100 )
+btn = Button(frm ,text="Show",command = BDB.bulk_players("players.csv"))
+btn.pack(side = tk.BOTTOM, padx =100 )
+
 
 tv = ttk.Treeview(frm, columns=(1,2,3), )
 tv.pack()

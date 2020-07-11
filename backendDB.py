@@ -45,6 +45,8 @@ def get_team():
     rows = mycursor.fetchall()
     for i in rows:
         print(i)
+    
+    return rows
     mydb.close()
 
 

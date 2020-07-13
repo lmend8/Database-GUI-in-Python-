@@ -11,7 +11,6 @@ import pandas as pd
 filename = open("players.csv")
 tablename = ""
 
-
 def insertSingle():
     mydb = sqlconn.connect(user = 'root', 
                         password = 'bodom987', 
@@ -35,93 +34,45 @@ def insertSingle():
     mydb.close()
 
 
-def get_team():
+def get_table(name):
     mydb = sqlconn.connect(user = 'root', 
                         password = 'bodom987', 
                         host = '127.0.0.1', 
                         database = "nfl_schema")
     mycursor = mydb.cursor()
-    mycursor.execute("SELECT * FROM teams")
+    query = "SELECT * FROM "+name
+    mycursor.execute(query)
     rows = mycursor.fetchall()
     for i in rows:
         print(i)
-    
     return rows
     mydb.close()
 
 
-def get_play():
+
+def delete_table(name):
     mydb = sqlconn.connect(user = 'root', 
                         password = 'bodom987', 
                         host = '127.0.0.1', 
                         database = "nfl_schema")
     mycursor = mydb.cursor()
-    mycursor.execute("SELECT * FROM play")
-    rows = mycursor.fetchall()
-    for i in rows:
-        print(i)
-    mydb.close()
-    
-    
-def get_players():
-    mydb = sqlconn.connect(user = 'root', 
-                        password = 'bodom987', 
-                        host = '127.0.0.1', 
-                        database = "nfl_schema")
-    mycursor = mydb.cursor()
-    mycursor.execute("SELECT * FROM players")
-    rows = mycursor.fetchall()
-    for i in rows:
-        print(i)
-    mydb.close()
-
-def get_players():
-    mydb = sqlconn.connect(user = 'root', 
-                        password = 'bodom987', 
-                        host = '127.0.0.1', 
-                        database = "nfl_schema")
-    mycursor = mydb.cursor()
-    mycursor.execute("SELECT * FROM players")
-    rows = mycursor.fetchall()
-    for i in rows:
-        print(i)
-    mydb.close()
-
-
-def get_games():
-    mydb = sqlconn.connect(user = 'root', 
-                        password = 'bodom987', 
-                        host = '127.0.0.1', 
-                        database = "nfl_schema")
-    mycursor = mydb.cursor()
-    mycursor.execute("SELECT * FROM games")
-    rows = mycursor.fetchall()
-    for i in rows:
-        print(i)
-    mydb.close()
-
-
-
-def delete_teams():
-    mydb = sqlconn.connect(user = 'root', 
-                        password = 'bodom987', 
-                        host = '127.0.0.1', 
-                        database = "nfl_schema")
-    mycursor = mydb.cursor()
-    mycursor.execute("DELETE FROM teams")
+    query = "DELETE FROM " + name
+    mycursor.execute(query) 
     mydb.commit()
     mydb.close()
     print("teams table cleared")
     
-def retrieve_max(table, column):
+def retrieve_max(column, table):
     mydb = sqlconn.connect(user = 'root', 
                         password = 'bodom987', 
                         host = '127.0.0.1', 
                         database = "nfl_schema")
     mycursor = mydb.cursor()
-    mycursor.execute("SELECT MAX(" + column + ") FROM " + table)
-    for i in mycursor:
-        print(i)
+    query = "SELECT MAX(" + column + ") FROM " + table
+    mycursor.execute(query)
+    maxVal = mycursor.fetchall()
+    print(maxVal)
+    return maxVal
     mydb.close()
     
 

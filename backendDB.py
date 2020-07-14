@@ -5,7 +5,7 @@ import pandas as pd
 import dotenv
 import os
 
-
+dotenv.load_dotenv()
 
 ## GLOBAL VARIABLES
 

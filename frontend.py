@@ -50,6 +50,14 @@ def getMax():
     table_input.delete(0,END)
     column_input.delete(0,END)
 
+
+def insertSingleRow():
+    list1.delete(0,END)
+    BDB.insertSingle()
+    display = "Data has been Inserted"
+    list.insert(0,display)
+    
+
         
 
 
@@ -58,7 +66,7 @@ def getMax():
 showBtn= Button(win ,text="Show", command=getTable)
 showBtn.place(x =60, y=280)
 
-singleBtn = Button(win,text ="Insert single")
+singleBtn = Button(win,text ="Insert single", command=insertSingleRow)
 singleBtn.place(x =120, y=280)
 
 multipleBtn = Button(win,text ="Insert Multiple")

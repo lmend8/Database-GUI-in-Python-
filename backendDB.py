@@ -2,41 +2,45 @@
 import mysql.connector as sqlconn
 import csv 
 import pandas as pd
-
+import dotenv
+import os
 
 
 
 ## GLOBAL VARIABLES
 
-filename = open("players.csv")
-tablename = ""
+try: 
+    with open("players.txt", 'r') as f:
+        text_file = f.readline()
+        print(text_file)
+        second_row = f.readline()
+        filename = f.read()
+        ##print(filename)
+except FileNotFoundError:
+    filename =None
 
 def insertSingle():
     mydb = sqlconn.connect(user = 'root', 
-                        password = 'bodom987', 
+                        password = os.getenv('DB_PASSWORD'), 
                         host = '127.0.0.1', 
                         database = "nfl_schema")
     
     
-    """
-    sql = "INSERT INTO passengers (PassID, FirstName, LastName, Birthdate, Address, Email, PhoneNumber, RewardPoints, Citizenship, Gender) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    data_sql = (492662290, 'Cloud', 'strife', '1981-6-19', '7830 State Street Saint Charles IL 60174', 'Dewitt@gmail.com', '9158226642', 3643, 'Mexico', 'f')
     
-    cursor.execute("show databases")
+    sql = "INSERT INTO players(text_file) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+    data_sql = (second_row)
+
+    print(data_sql)
     
-    for i in mycursor:
-        print(i)
-    
-    """
-    cursor = mydb.cursor()
-    cursor.execute(sql, data_sql)
+    mycursor = mydb.cursor()
+    mycursor.execute(sql, (data_sql,))
     mydb.commit()
     mydb.close()
 
 
 def get_table(name):
     mydb = sqlconn.connect(user = 'root', 
-                        password = 'bodom987', 
+                       password = os.getenv('DB_PASSWORD'), 
                         host = '127.0.0.1', 
                         database = "nfl_schema")
     mycursor = mydb.cursor()
@@ -52,7 +56,7 @@ def get_table(name):
 
 def delete_table(name):
     mydb = sqlconn.connect(user = 'root', 
-                        password = 'bodom987', 
+                        password = os.getenv('DB_PASSWORD'), 
                         host = '127.0.0.1', 
                         database = "nfl_schema")
     mycursor = mydb.cursor()
@@ -64,7 +68,7 @@ def delete_table(name):
     
 def retrieve_max(column, table):
     mydb = sqlconn.connect(user = 'root', 
-                        password = 'bodom987', 
+                        password = os.getenv('DB_PASSWORD'), 
                         host = '127.0.0.1', 
                         database = "nfl_schema")
     mycursor = mydb.cursor()
@@ -79,7 +83,7 @@ def retrieve_max(column, table):
 
 def multi_row_games(filename='games.csv'):
     mydb = sqlconn.connect(user = 'root', 
-                        password = 'bodom987', 
+                        password = os.getenv('DB_PASSWORD'), 
                         host = '127.0.0.1', 
                         database = "nfl_schema")
     cursor = mydb.cursor()
@@ -107,7 +111,7 @@ def multi_row_games(filename='games.csv'):
     
 def bulk_players(filename='players.csv'):
     mydb = sqlconn.connect(user='root', 
-                        password='bodom987', 
+                        password = os.getenv('DB_PASSWORD'), 
                         host='127.0.0.1', 
                         database='nfl_schema', 
                         auth_plugin='mysql_native_password',
@@ -130,7 +134,7 @@ def multi_row_players(filename='players.csv'):
     valuesA = values[:half]
     valuesB = values[half:]
     mydb = sqlconn.connect(user = 'root', 
-                        password = 'bodom987', 
+                        password = os.getenv('DB_PASSWORD'), 
                         host = '127.0.0.1', 
                         database = "nfl_schema",
                         auth_plugin='mysql_native_password')

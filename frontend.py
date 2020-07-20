@@ -16,62 +16,134 @@ list1 = Listbox(win,width=100, height=14)
 list1.place(x=60, y=340)
 
 
+options = [
+    "players",
+    "games",
+    "teams",
+    "play"
+]
+
+
+playersColumns = [
+    "PlayerID",
+    "FirstName",
+    "LastName",
+    "TeamID",
+    "Position", 
+    "Touchdown",
+    "TotalYards",
+    "Salary"
+]
+
+teamsColumns = [
+    "TeamID",
+    "TeamName",
+    "City",
+]
+
+gamesColumns = [
+    "GameID",
+    "Dates",
+    "Stadium",
+    "Result",
+    "Attendance", 
+    "TicketRevenue"
+]
+
+playColumns = [
+    "PlayerID",
+    "GameID"
+]
+
+
+
+
+
+clicked = StringVar()
+drop = OptionMenu(win,clicked, *options)
+clicked.set(options[0])
+drop.place(x=210, y=100)
+
+
+##for columns
+clicked2 = StringVar()
+"""
+drop2 = OptionMenu(win,clicked2,*playersColumns)
+drop2.place(x=250, y=150)
+"""
+
 ##input boxes
-table_name = Label(win, text="Please Enter Table name: ")
+table_name = Label(win, text="Please Select Table name: ")
 table_name.place(x=70, y=100)
-table_input = Entry(win)
-table_input.place(x=210, y=100)
 
-column_name = Label(win, text="Enter column name to find max: ")
+##choose column name
+column_name = Label(win, text="Select column name to find max: ")
 column_name.place(x=70, y=150)
-column_input = Entry(win)
-column_input.place(x=250, y=150)
 
-tables_show_names = Label(win, text="Tables: games, players, play, teams")
-tables_show_names.place(x=70, y=200)
+
+def refreshColumns ():
+    name = clicked.get()
+    if(name == "players"):
+        drop2 = OptionMenu(win,clicked2,*playersColumns)
+        clicked2.set(playersColumns[0])
+        drop2.place(x=250, y=150)
+    elif(name =="games" ):
+        drop2 = OptionMenu(win,clicked2,*gamesColumns)
+        clicked2.set(gamesColumns[0])
+        drop2.place(x=250,y=150)
+    elif(name == "play"):
+        drop2 = OptionMenu(win,clicked2,*playColumns)
+        clicked2.set(playColumns[0])
+        drop2.place(x=250,y=150)
+    elif(name == "teams"):
+        drop2 = OptionMenu(win,clicked2,*teamsColumns)
+        clicked2.set(teamsColumns[0])
+        drop2.place(x=250,y=150)
+
 
 
 def getTable():
     list1.delete(0,END)
-    name = table_input.get()
+    name = clicked.get()
     rows = BDB.get_table(name)
     for i in rows: 
             list1.insert(list1.size()+1,i)
-    table_input.delete(0,END)
 
 
 def deleteTable():
     list1.delete(0,END)
-    name = table_input.get()
+    name = clicked.get()
     BDB.delete_table(name)
     display = "Table has been deleted"
     list1.insert(0,display)
 
 def getMax():
     list1.delete(0,END)
-    name = table_input.get()
-    column = column_input.get()
-    max = BDB.retrieve_max(column,name)
+    name = clicked.get()
+    max = BDB.retrieve_max(clicked2.get(),name)
     list1.insert(0,max)
-    table_input.delete(0,END)
-    column_input.delete(0,END)
 
  
 def insertSingleRow():
     list1.delete(0,END)
-    filename = table_input.get()+".csv"
+    filename = clicked.get()+".csv"
     BDB.insertSingle(filename)
-    display = "Data has been Inserted"
+    display = "Data has been inserted using INSERT INTO"
     list1.insert(0,display)
 
 def loadData():
     list1.delete(0,END)
-    filename = table_input.get()+".csv"
+    filename = clicked.get()+".csv"
     BDB.bulk_data(filename)
+    display = "Data has been inserted using LOAD DATA"
+    list1.insert(0,display)
     
-
-        
-
+def multipleRow():
+    list1.delete(0,END)
+    filename = clicked.get()+".csv"
+    BDB.multi_row_table(filename)
+    display = "Data has been inserted using MULTIPLE ROWS"
+    list1.insert(0,display)
 
 
 ## Buttons for GUI 
@@ -93,16 +165,10 @@ loadBtn.place(x =410, y=280)
 maxBtn = Button(win,text ="Max Value", command=getMax)
 maxBtn.place(x =490, y=280)
 
+refreshBtn = Button(win,text="Show/Refresh Column", command=refreshColumns)
+refreshBtn.place(x =350, y=150)
 
 
-
-
-
-
-##for i in rows:
-
-##submit_button = Button(win, text = "Insert new data record to the database", command = submit)
-##submit_button.grid(row = 100, column = 20, columnspan = 20, ipadx = 100)
 
 
 

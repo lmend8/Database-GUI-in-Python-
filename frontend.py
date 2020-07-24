@@ -15,7 +15,13 @@ win.geometry("800x600")
 list1 = Listbox(win,width=100, height=14)
 list1.place(x=60, y=340)
 
-
+file = [
+    "players10000",
+    "players",
+    "games",
+    "play",
+    "teams"
+]
 options = [
     "players",
     "games",
@@ -56,7 +62,10 @@ playColumns = [
 ]
 
 
-
+fileClicked = StringVar()
+filedrop = OptionMenu(win, fileClicked, *file)
+fileClicked.set(file[0])
+filedrop.place(x=210,y=50)
 
 
 clicked = StringVar()
@@ -72,6 +81,9 @@ drop2 = OptionMenu(win,clicked2,*playersColumns)
 drop2.place(x=250, y=150)
 """
 
+file_name = Label(win, text="Please Select file name: ")
+file_name.place(x=70, y=50)
+
 ##input boxes
 table_name = Label(win, text="Please Select Table name: ")
 table_name.place(x=70, y=100)
@@ -83,7 +95,11 @@ column_name.place(x=70, y=150)
 
 def refreshColumns ():
     name = clicked.get()
-    if(name == "players"):
+    if(name == "players10000"):
+        drop2 = OptionMenu(win,clicked2,*playersColumns)
+        clicked2.set(playersColumns[0])
+        drop2.place(x=250, y=150)
+    elif(name == "players"):
         drop2 = OptionMenu(win,clicked2,*playersColumns)
         clicked2.set(playersColumns[0])
         drop2.place(x=250, y=150)
@@ -126,21 +142,24 @@ def getMax():
  
 def insertSingleRow():
     list1.delete(0,END)
-    filename = clicked.get()+".csv"
+    filename = fileClicked.get()+".csv"
     BDB.insertSingle(filename)
     display = "Data has been inserted using INSERT INTO"
+    totalTime = "This action was done in:"
     list1.insert(0,display)
 
 def loadData():
     list1.delete(0,END)
-    filename = clicked.get()+".csv"
+    filename = fileClicked.get()+".csv"
     BDB.bulk_data(filename)
     display = "Data has been inserted using LOAD DATA"
+    totalTime = "This action was done in:"
     list1.insert(0,display)
+
     
 def multipleRow():
     list1.delete(0,END)
-    filename = clicked.get()+".csv"
+    filename = fileClicked.get()+".csv"
     BDB.multi_row_table(filename)
     display = "Data has been inserted using MULTIPLE ROWS"
     list1.insert(0,display)
@@ -153,7 +172,7 @@ showBtn.place(x =60, y=280)
 singleBtn = Button(win,text ="Single Insert", command=insertSingleRow)
 singleBtn.place(x =140, y=280)
 
-multipleBtn = Button(win,text ="Multiple-row")
+multipleBtn = Button(win,text ="Multiple-row", command=multipleRow)
 multipleBtn.place(x =220, y=280)
 
 deleteBtn = Button(win,text ="Delete table", command=deleteTable)

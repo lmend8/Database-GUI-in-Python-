@@ -15,8 +15,13 @@ win.geometry("800x600")
 list1 = Listbox(win,width=100, height=14)
 list1.place(x=60, y=340)
 
+
+
+##Data for dropdowns
 file = [
     "players10000",
+    "players100000",
+    "players1000000",
     "players",
     "games",
     "play",
@@ -61,13 +66,13 @@ playColumns = [
     "GameID"
 ]
 
-
+#dropmenu for files
 fileClicked = StringVar()
 filedrop = OptionMenu(win, fileClicked, *file)
 fileClicked.set(file[0])
 filedrop.place(x=210,y=50)
 
-
+#dropmenu for tables
 clicked = StringVar()
 drop = OptionMenu(win,clicked, *options)
 clicked.set(options[0])
@@ -76,13 +81,14 @@ drop.place(x=210, y=100)
 
 ##for columns
 clicked2 = StringVar()
-"""
-drop2 = OptionMenu(win,clicked2,*playersColumns)
-drop2.place(x=250, y=150)
-"""
+
 
 file_name = Label(win, text="Please Select file name: ")
 file_name.place(x=70, y=50)
+
+introFile = Label(win,text="(NOTE:Use the correct file for the corresponding table e.g. file games = games table)")
+introFile.place(x=345, y=50)
+
 
 ##input boxes
 table_name = Label(win, text="Please Select Table name: ")
@@ -92,14 +98,10 @@ table_name.place(x=70, y=100)
 column_name = Label(win, text="Select column name to find max: ")
 column_name.place(x=70, y=150)
 
-
+#method to show the columns of tables
 def refreshColumns ():
     name = clicked.get()
-    if(name == "players10000"):
-        drop2 = OptionMenu(win,clicked2,*playersColumns)
-        clicked2.set(playersColumns[0])
-        drop2.place(x=250, y=150)
-    elif(name == "players"):
+    if(name == "players" or name == "players10000" or name == "players100000" or name == "players1000000"):
         drop2 = OptionMenu(win,clicked2,*playersColumns)
         clicked2.set(playersColumns[0])
         drop2.place(x=250, y=150)
@@ -117,7 +119,7 @@ def refreshColumns ():
         drop2.place(x=250,y=150)
 
 
-
+# retrive all
 def getTable():
     list1.delete(0,END)
     name = clicked.get()
@@ -125,7 +127,7 @@ def getTable():
     for i in rows: 
             list1.insert(list1.size()+1,i)
 
-
+#delete
 def deleteTable():
     list1.delete(0,END)
     name = clicked.get()
@@ -133,36 +135,32 @@ def deleteTable():
     display = "Table has been deleted"
     list1.insert(0,display)
 
+#get max of the column specify
 def getMax():
     list1.delete(0,END)
     name = clicked.get()
     max = BDB.retrieve_max(clicked2.get(),name)
     list1.insert(0,max)
 
- 
+#INSERT INTO technique
 def insertSingleRow():
     list1.delete(0,END)
     filename = fileClicked.get()+".csv"
-    BDB.insertSingle(filename)
-    display = "Data has been inserted using INSERT INTO"
-    totalTime = "This action was done in:"
-    list1.insert(0,display)
+    query = BDB.insertSingle(filename)
+    list1.insert(0,query)
 
+#LOAD DATA technique
 def loadData():
     list1.delete(0,END)
     filename = fileClicked.get()+".csv"
-    BDB.bulk_data(filename)
-    display = "Data has been inserted using LOAD DATA"
-    totalTime = "This action was done in:"
-    list1.insert(0,display)
-
-    
+    query = BDB.bulk_data(filename)
+    list1.insert(0,query)
+#MULIT ROW tehnique 
 def multipleRow():
     list1.delete(0,END)
     filename = fileClicked.get()+".csv"
-    BDB.multi_row_table(filename)
-    display = "Data has been inserted using MULTIPLE ROWS"
-    list1.insert(0,display)
+    query = BDB.multi_row_table(filename)
+    list1.insert(0,query)
 
 
 ## Buttons for GUI 
@@ -188,7 +186,5 @@ refreshBtn = Button(win,text="Show/Refresh Column", command=refreshColumns)
 refreshBtn.place(x =350, y=150)
 
 
-
-
-
+#loop to run the program
 win.mainloop()
